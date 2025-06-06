@@ -220,7 +220,7 @@ const CreateScreen = () => {
           ))}
         </View>
       </View>
-      {true && (
+      {isLoading && (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={COLORS.primary} />
         </View>
