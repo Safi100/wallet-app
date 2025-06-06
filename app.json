@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "wallet-app",
+    "name": "Wallet App",
     "slug": "wallet-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/revenue-i3.png",
     "scheme": "walletapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -21,17 +21,16 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/revenue-i3.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "image": "./assets/images/revenue-i3.png",
+          "imageWidth": 300,
+          "resizeMode": "contain"
         }
       ]
     ],
