@@ -1,23 +1,16 @@
 {
   "cli": {
-    "version": ">= 16.7.0",
-    "appVersionSource": "remote"
+    "version": ">= 16.7.0"
   },
   "build": {
-    "development": {
+    "preview": {
       "distribution": "internal",
       "android": {
         "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_BASE_URL": "https://wallet-app-server-mydy.onrender.com"
       }
-    },
-    "preview": {
-      "distribution": "internal"
-    },
-    "production": {
-      "autoIncrement": true
     }
-  },
-  "submit": {
-    "production": {}
   }
 }
