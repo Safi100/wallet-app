@@ -2,12 +2,16 @@ import { Ionicons } from "@expo/vector-icons";
 import { Text, TouchableOpacity, View } from "react-native";
 import { styles } from "../assets/style/home.styles";
 import { COLORS } from "../constants/colors";
-import { formatDate } from "../lib/utils";
 
-const TransactionItem = ({ item, onDelete }) => {
+const TransactionItem = ({ item, onDelete, isLastIndex }) => {
   const isIncome = parseFloat(item.amount) > 0;
   return (
-    <View style={styles.transactionCard}>
+    <View
+      style={[
+        styles.transactionCard,
+        { marginBottom: isLastIndex ? 0 : 10 }, // فقط للعناصر غير الأخيرة
+      ]}
+    >
       <TouchableOpacity style={styles.transactionContent}>
         <View style={styles.categoryIconContainer}>
           <Ionicons
@@ -30,9 +34,9 @@ const TransactionItem = ({ item, onDelete }) => {
             {isIncome ? "+" : "-"}₪{""}
             {Math.abs(parseFloat(item.amount)).toFixed(2)}
           </Text>
-          <Text style={styles.transactionDate}>
+          {/* <Text style={styles.transactionDate}>
             {formatDate(item.createdAt)}
-          </Text>
+          </Text> */}
         </View>
       </TouchableOpacity>
       <TouchableOpacity
