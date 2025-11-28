@@ -1,9 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
-  Alert,
   FlatList,
   Image,
   RefreshControl,
@@ -16,13 +16,13 @@ import BalanceCard from "../../components/BalanceCard";
 import NoTransactionsFound from "../../components/NoTransactionsFound";
 import PageLoader from "../../components/PageLoader";
 import SignOutButton from "../../components/SignOutButton";
-import TransactionItem from "../../components/TransactionItem";
+import TransactionList from "../../components/TransactionList";
 import { useTransaction } from "../../hooks/useTransaction";
-
 const Index = () => {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [categoriesCount, setCategoriesCount] = useState(0);
 
   useEffect(() => {
     const getUser = async () => {
@@ -30,7 +30,25 @@ const Index = () => {
       setUser(JSON.parse(user));
     };
 
+    const fetchCategoriesCount = async () => {
+      try {
+        const token = await AsyncStorage.getItem("token");
+        const response = await axios.get(
+          `${process.env.EXPO_PUBLIC_BASE_URL}/api/category`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setCategoriesCount(response.data.length || 0);
+      } catch (err) {
+        console.log("Error fetching categories count:", err);
+      }
+    };
+
     getUser();
+    fetchCategoriesCount();
   }, []);
 
   const { transactions, summary, isLoading, loadData, deleteTransaction } =
@@ -45,24 +63,6 @@ const Index = () => {
   useEffect(() => {
     loadData();
   }, [loadData]);
-
-  const handleDelete = (id) => {
-    Alert.alert(
-      "Delete Transaction",
-      "Are you sure you want to delete this transaction?",
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: () => deleteTransaction(id),
-        },
-      ]
-    );
-  };
 
   if (isLoading && !refreshing) {
     return <PageLoader />;
@@ -99,6 +99,20 @@ const Index = () => {
             <SignOutButton />
           </View>
         </View>
+        {/* CATEGORIES SECTION */}
+        <TouchableOpacity
+          style={styles.categoriesSection}
+          onPress={() => router.push("/categories")}
+        >
+          <View style={styles.categoriesSectionLeft}>
+            <Ionicons name="grid" size={22} color="#FFF" />
+            <Text style={styles.categoriesSectionText}>Categories</Text>
+          </View>
+          <View style={styles.categoriesSectionRight}>
+            <Text style={styles.categoriesCount}>{categoriesCount}</Text>
+            <Ionicons name="chevron-forward" size={20} color="#FFF" />
+          </View>
+        </TouchableOpacity>
         <BalanceCard summary={summary} />
         <View style={styles.transactionsHeaderContainer}>
           <Text style={styles.sectionTitle}>Recent Transactions</Text>
@@ -108,10 +122,8 @@ const Index = () => {
         style={styles.transactionsList}
         contentContainerStyle={styles.transactionsListContent}
         data={transactions}
-        keyExtractor={(item) => item._id}
-        renderItem={({ item }) => (
-          <TransactionItem item={item} onDelete={handleDelete} />
-        )}
+        keyExtractor={(item) => item.date}
+        renderItem={({ item }) => <TransactionList list={item} />}
         ListEmptyComponent={<NoTransactionsFound />}
         showsVerticalScrollIndicator={false}
         refreshControl={
