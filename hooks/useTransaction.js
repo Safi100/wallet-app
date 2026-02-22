@@ -21,7 +21,7 @@ export const useTransaction = () => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       setTransactions(response.data);
@@ -40,7 +40,7 @@ export const useTransaction = () => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       setSummary({
         balance: response.data.balance,
@@ -68,15 +68,47 @@ export const useTransaction = () => {
   const deleteTransaction = async (id) => {
     try {
       const token = await AsyncStorage.getItem("token");
-      await axios.delete(
+      const response = await axios.delete(
         `${process.env.EXPO_PUBLIC_BASE_URL}/api/transaction/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
-      await loadData();
+
+      // Get the deleted transaction from response
+      const deletedTransaction = response.data.transaction;
+
+      // Update transactions list by removing the deleted transaction
+      setTransactions((prevTransactions) => {
+        return prevTransactions
+          .map((group) => ({
+            ...group,
+            transactions: group.transactions.filter((tx) => tx._id !== id),
+          }))
+          .filter((group) => group.transactions.length > 0);
+      });
+
+      // Update summary based on deleted transaction type and amount
+      setSummary((prevSummary) => {
+        const newBalance = prevSummary.balance - deletedTransaction.amount;
+        const newIncome =
+          deletedTransaction.type === "income"
+            ? prevSummary.income - deletedTransaction.amount
+            : prevSummary.income;
+        const newExpenses =
+          deletedTransaction.type === "expenses"
+            ? prevSummary.expenses - deletedTransaction.amount
+            : prevSummary.expenses;
+
+        return {
+          balance: newBalance,
+          income: newIncome,
+          expenses: newExpenses,
+        };
+      });
+
       Alert.alert("Success", "Transaction deleted successfully!");
     } catch (err) {
       Alert.alert("Error", "Failed to delete transaction");

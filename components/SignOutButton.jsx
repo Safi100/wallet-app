@@ -20,7 +20,7 @@ const SignOutButton = () => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       await AsyncStorage.removeItem("token");
       await AsyncStorage.removeItem("user");

@@ -39,7 +39,7 @@ const Index = () => {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
         setCategoriesCount(response.data.length || 0);
       } catch (err) {
@@ -123,7 +123,9 @@ const Index = () => {
         contentContainerStyle={styles.transactionsListContent}
         data={transactions}
         keyExtractor={(item) => item.date}
-        renderItem={({ item }) => <TransactionList list={item} />}
+        renderItem={({ item }) => (
+          <TransactionList list={item} onDelete={deleteTransaction} />
+        )}
         ListEmptyComponent={<NoTransactionsFound />}
         showsVerticalScrollIndicator={false}
         refreshControl={

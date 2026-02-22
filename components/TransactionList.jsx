@@ -1,18 +1,12 @@
 import { Alert, Text, View } from "react-native";
 import { styles } from "../assets/style/home.styles";
 import { COLORS } from "../constants/colors";
-import { useTransaction } from "../hooks/useTransaction";
 import { formatDate } from "../lib/utils";
 import TransactionItem from "./TransactionItem";
 
 const TransactionList = ({ list, onDelete }) => {
-  const { deleteTransaction } = useTransaction();
-
   const handleDelete = (id) => {
-    if (onDelete) {
-      onDelete(id);
-      return;
-    }
+    const deleteAction = onDelete || (() => {});
 
     Alert.alert(
       "Delete Transaction",
@@ -25,9 +19,9 @@ const TransactionList = ({ list, onDelete }) => {
         {
           text: "Delete",
           style: "destructive",
-          onPress: () => deleteTransaction(id),
+          onPress: () => deleteAction(id),
         },
-      ]
+      ],
     );
   };
 

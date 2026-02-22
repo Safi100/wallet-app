@@ -34,7 +34,7 @@ const CategoryDetailsScreen = () => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       setTransactions(response.data.transactions || []);
       setSummary(response.data.summary || { total: 0, count: 0 });
@@ -56,38 +56,41 @@ const CategoryDetailsScreen = () => {
   };
 
   const handleDelete = async (id) => {
-    Alert.alert(
-      "Delete Transaction",
-      "Are you sure you want to delete this transaction?",
-      [
+    try {
+      const token = await AsyncStorage.getItem("token");
+      const response = await axios.delete(
+        `${process.env.EXPO_PUBLIC_BASE_URL}/api/transaction/${id}`,
         {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: async () => {
-            try {
-              const token = await AsyncStorage.getItem("token");
-              await axios.delete(
-                `${process.env.EXPO_PUBLIC_BASE_URL}/api/transaction/${id}`,
-                {
-                  headers: {
-                    Authorization: `Bearer ${token}`,
-                  },
-                }
-              );
-              await fetchCategoryTransactions();
-              Alert.alert("Success", "Transaction deleted successfully!");
-            } catch (err) {
-              Alert.alert("Error", "Failed to delete transaction");
-              console.log("Error deleting transaction:", err);
-            }
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
         },
-      ]
-    );
+      );
+
+      // Get the deleted transaction from response
+      const deletedTransaction = response.data.transaction;
+
+      // Update transactions list by removing the deleted transaction
+      setTransactions((prevTransactions) => {
+        return prevTransactions
+          .map((group) => ({
+            ...group,
+            transactions: group.transactions.filter((tx) => tx._id !== id),
+          }))
+          .filter((group) => group.transactions.length > 0);
+      });
+
+      // Update summary
+      setSummary((prevSummary) => ({
+        total: prevSummary.total - deletedTransaction.amount,
+        count: prevSummary.count - 1,
+      }));
+
+      Alert.alert("Success", "Transaction deleted successfully!");
+    } catch (err) {
+      Alert.alert("Error", "Failed to delete transaction");
+      console.log("Error deleting transaction:", err);
+    }
   };
 
   if (isLoading && !refreshing) {
