@@ -1,9 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import { useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import { Alert } from "react-native";
 
 export const useTransaction = () => {
+  const router = useRouter();
   const [transactions, setTransactions] = useState([]);
   const [summary, setSummary] = useState({
     balance: 0,
@@ -11,6 +13,14 @@ export const useTransaction = () => {
     income: 0,
   });
   const [isLoading, setIsLoading] = useState(true);
+
+  // Handle token expiration and redirect to sign in
+  const handleTokenExpired = useCallback(async () => {
+    console.log("🔐 Token expired - logging out...");
+    await AsyncStorage.removeItem("token");
+    await AsyncStorage.removeItem("user");
+    router.replace("(auth)/sign-in");
+  }, [router]);
 
   const fetchTransactions = useCallback(async () => {
     try {
@@ -28,9 +38,18 @@ export const useTransaction = () => {
 
       setIsLoading(false);
     } catch (err) {
-      console.log("Error fetching transactions:", err);
+      const errorMsg = err.response?.data || err.message;
+      console.log("Error fetching transactions:", errorMsg);
+
+      // Check if token is invalid or expired
+      if (
+        err.response?.status === 401 ||
+        errorMsg.toString().includes("Invalid or expired token")
+      ) {
+        handleTokenExpired();
+      }
     }
-  }, []);
+  }, [handleTokenExpired]);
   const fetchSummary = useCallback(async () => {
     try {
       const token = await AsyncStorage.getItem("token");
@@ -49,10 +68,19 @@ export const useTransaction = () => {
       });
       setIsLoading(false);
     } catch (err) {
-      console.log("Error fetching summary:", err);
+      const errorMsg = err.response?.data || err.message;
+      console.log("Error fetching summary:", errorMsg);
       setIsLoading(false);
+
+      // Check if token is invalid or expired
+      if (
+        err.response?.status === 401 ||
+        errorMsg.toString().includes("Invalid or expired token")
+      ) {
+        handleTokenExpired();
+      }
     }
-  }, []);
+  }, [handleTokenExpired]);
 
   const loadData = useCallback(async () => {
     setIsLoading(true);

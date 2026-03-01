@@ -24,6 +24,26 @@ const Index = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [categoriesCount, setCategoriesCount] = useState(0);
 
+  // Check authentication on mount
+  useEffect(() => {
+    const checkAuth = async () => {
+      const token = await AsyncStorage.getItem("token");
+
+      if (!token) {
+        router.replace("(auth)/sign-in");
+      }
+    };
+    checkAuth();
+  }, [router]);
+
+  // Handle token expiration
+  const handleTokenExpired = async () => {
+    console.log("🔐 Token expired - logging out...");
+    await AsyncStorage.removeItem("token");
+    await AsyncStorage.removeItem("user");
+    router.replace("(auth)/sign-in");
+  };
+
   useEffect(() => {
     const getUser = async () => {
       const user = await AsyncStorage.getItem("user");
@@ -33,6 +53,7 @@ const Index = () => {
     const fetchCategoriesCount = async () => {
       try {
         const token = await AsyncStorage.getItem("token");
+        console.log("Token for categories:", token);
         const response = await axios.get(
           `${process.env.EXPO_PUBLIC_BASE_URL}/api/category`,
           {
@@ -43,7 +64,16 @@ const Index = () => {
         );
         setCategoriesCount(response.data.length || 0);
       } catch (err) {
-        console.log("Error fetching categories count:", err);
+        const errorMsg = err.response?.data || err.message;
+        console.log("Error fetching categories count:", errorMsg);
+
+        // Check if token is invalid or expired
+        if (
+          err.response?.status === 401 ||
+          errorMsg.toString().includes("Invalid or expired token")
+        ) {
+          handleTokenExpired();
+        }
       }
     };
 
