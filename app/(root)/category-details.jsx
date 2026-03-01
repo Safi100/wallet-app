@@ -11,14 +11,16 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { styles } from "../../assets/style/categoryDetails.styles";
+import { createCategoryDetailsStyles } from "../../assets/style/categoryDetails.styles";
 import NoTransactionsFound from "../../components/NoTransactionsFound";
 import PageLoader from "../../components/PageLoader";
 import TransactionList from "../../components/TransactionList";
-import { COLORS } from "../../constants/colors";
+import { useTheme } from "../../hooks/useTheme";
 
 const CategoryDetailsScreen = () => {
   const router = useRouter();
+  const { colors } = useTheme();
+  const styles = createCategoryDetailsStyles(colors);
   const { categoryId, categoryName } = useLocalSearchParams();
   const [transactions, setTransactions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -105,7 +107,7 @@ const CategoryDetailsScreen = () => {
           style={styles.backButton}
           onPress={() => router.back()}
         >
-          <Ionicons name="arrow-back" size={24} color={COLORS.text} />
+          <Ionicons name="arrow-back" size={24} color={colors.text} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>{categoryName}</Text>
         <View style={{ width: 40 }} />
@@ -118,7 +120,7 @@ const CategoryDetailsScreen = () => {
           <Text
             style={[
               styles.summaryValue,
-              { color: summary.total >= 0 ? COLORS.income : COLORS.expense },
+              { color: summary.total >= 0 ? colors.income : colors.expense },
             ]}
           >
             {summary.total >= 0 ? "+" : ""}₪{Math.abs(summary.total).toFixed(2)}

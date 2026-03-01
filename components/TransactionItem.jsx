@@ -1,9 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Text, TouchableOpacity, View } from "react-native";
-import { styles } from "../assets/style/home.styles";
-import { COLORS } from "../constants/colors";
+import { createHomeStyles } from "../assets/style/home.styles";
+import { useTheme } from "../hooks/useTheme";
 
 const TransactionItem = ({ item, onDelete, isLastIndex }) => {
+  const { colors } = useTheme();
+  const styles = createHomeStyles(colors);
   const isIncome = parseFloat(item.amount) > 0;
   return (
     <View
@@ -17,7 +19,7 @@ const TransactionItem = ({ item, onDelete, isLastIndex }) => {
           <Ionicons
             name={item.category?.icon}
             size={22}
-            color={isIncome ? COLORS.income : COLORS.expense}
+            color={isIncome ? colors.income : colors.expense}
           />
         </View>
         <View style={styles.transactionLeft}>
@@ -28,7 +30,7 @@ const TransactionItem = ({ item, onDelete, isLastIndex }) => {
           <Text
             style={[
               styles.transactionAmount,
-              { color: isIncome ? COLORS.income : COLORS.expense },
+              { color: isIncome ? colors.income : colors.expense },
             ]}
           >
             {isIncome ? "+" : "-"}₪{""}
@@ -43,7 +45,7 @@ const TransactionItem = ({ item, onDelete, isLastIndex }) => {
         style={styles.deleteButton}
         onPress={() => onDelete(item._id)}
       >
-        <Ionicons name="trash-outline" size={20} color={COLORS.expense} />
+        <Ionicons name="trash-outline" size={20} color={colors.expense} />
       </TouchableOpacity>
     </View>
   );

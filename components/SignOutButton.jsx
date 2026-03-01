@@ -3,11 +3,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useRouter } from "expo-router";
 import { Alert, TouchableOpacity } from "react-native";
-import { styles } from "../assets/style/home.styles";
-import { COLORS } from "../constants/colors";
+import { createHomeStyles } from "../assets/style/home.styles";
+import { useTheme } from "../hooks/useTheme";
 
 const SignOutButton = () => {
   const router = useRouter();
+  const { colors } = useTheme();
+  const styles = createHomeStyles(colors);
 
   const handleSignOut = async () => {
     try {
@@ -46,7 +48,7 @@ const SignOutButton = () => {
 
   return (
     <TouchableOpacity style={styles.logoutButton} onPress={SignOutAlert}>
-      <Ionicons name="log-out-outline" size={22} color={COLORS.text} />
+      <Ionicons name="log-out-outline" size={22} color={colors.text} />
     </TouchableOpacity>
   );
 };

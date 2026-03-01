@@ -11,12 +11,14 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { styles } from "../../assets/style/create.styles";
-import { COLORS } from "../../constants/colors";
+import { createCreateStyles } from "../../assets/style/create.styles";
+import { useTheme } from "../../hooks/useTheme";
 
 const CreateScreen = () => {
   //   const user = await AsyncStorage.getItem("user");
   const router = useRouter();
+  const { colors } = useTheme();
+  const styles = createCreateStyles(colors);
   const [categories, setCategories] = useState([]);
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
@@ -35,7 +37,7 @@ const CreateScreen = () => {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
         setCategories(response.data);
         console.log(response.data);
@@ -73,7 +75,7 @@ const CreateScreen = () => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       Alert.alert("Success", "Transaction created successfully!");
       router.replace("/");
@@ -92,7 +94,7 @@ const CreateScreen = () => {
           style={styles.backButton}
           onPress={() => router.back()}
         >
-          <Ionicons name="arrow-back" size={24} color={COLORS.text} />
+          <Ionicons name="arrow-back" size={24} color={colors.text} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>New Transaction</Text>
         <TouchableOpacity
@@ -107,7 +109,7 @@ const CreateScreen = () => {
             {isLoading ? "Saving..." : "Save"}
           </Text>
           {!isLoading && (
-            <Ionicons name="checkmark" size={18} color={COLORS.primary} />
+            <Ionicons name="checkmark" size={18} color={colors.primary} />
           )}
         </TouchableOpacity>
       </View>
@@ -121,7 +123,7 @@ const CreateScreen = () => {
             <Ionicons
               name="arrow-down-circle"
               size={22}
-              color={isExpense ? COLORS.white : COLORS.expense}
+              color={isExpense ? colors.white : colors.expense}
               style={styles.typeIcon}
             />
             <Text
@@ -141,7 +143,7 @@ const CreateScreen = () => {
             <Ionicons
               name="arrow-up-circle"
               size={22}
-              color={!isExpense ? COLORS.white : COLORS.income}
+              color={!isExpense ? colors.white : colors.income}
               style={styles.typeIcon}
             />
             <Text
@@ -160,7 +162,7 @@ const CreateScreen = () => {
           <TextInput
             style={styles.amountInput}
             placeholder="0.00"
-            placeholderTextColor={COLORS.textLight}
+            placeholderTextColor={colors.textLight}
             value={amount}
             onChangeText={setAmount}
             keyboardType="numeric"
@@ -172,13 +174,13 @@ const CreateScreen = () => {
           <Ionicons
             name="create-outline"
             size={22}
-            color={COLORS.textLight}
+            color={colors.textLight}
             style={styles.inputIcon}
           />
           <TextInput
             style={styles.input}
             placeholder="Transaction Title"
-            placeholderTextColor={COLORS.textLight}
+            placeholderTextColor={colors.textLight}
             value={title}
             onChangeText={setTitle}
             autoFocus={false}
@@ -186,7 +188,7 @@ const CreateScreen = () => {
         </View>
         {/* TITLE */}
         <Text style={styles.sectionTitle}>
-          <Ionicons name="pricetag-outline" size={16} color={COLORS.text} />{" "}
+          <Ionicons name="pricetag-outline" size={16} color={colors.text} />{" "}
           Category
         </Text>
         <View style={styles.categoryGrid}>
@@ -204,7 +206,7 @@ const CreateScreen = () => {
                 name={category.icon}
                 size={20}
                 color={
-                  selectedCategory === category._id ? COLORS.white : COLORS.text
+                  selectedCategory === category._id ? colors.white : colors.text
                 }
                 style={styles.categoryIcon}
               />
@@ -223,7 +225,7 @@ const CreateScreen = () => {
       </View>
       {isLoading && (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={COLORS.primary} />
+          <ActivityIndicator size="large" color={colors.primary} />
         </View>
       )}
     </View>

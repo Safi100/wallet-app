@@ -103,45 +103,6 @@ const darkTheme = {
   shadow: "#000000",
 };
 
-const skyTheme = {
-  primary: "#1976D2",
-  background: "#E3F2FD",
-  text: "#0D47A1",
-  border: "#BBDEFB",
-  white: "#FFFFFF",
-  textLight: "#64B5F6",
-  expense: "#F44336",
-  income: "#4CAF50",
-  card: "#FFFFFF",
-  shadow: "#000000",
-};
-
-const lavenderTheme = {
-  primary: "#7B1FA2",
-  background: "#F3E5F5",
-  text: "#4A148C",
-  border: "#E1BEE7",
-  white: "#FFFFFF",
-  textLight: "#AB47BC",
-  expense: "#E53935",
-  income: "#43A047",
-  card: "#FFFFFF",
-  shadow: "#000000",
-};
-
-const amberTheme = {
-  primary: "#F57C00",
-  background: "#FFF8E1",
-  text: "#E65100",
-  border: "#FFE082",
-  white: "#FFFFFF",
-  textLight: "#FFB300",
-  expense: "#D32F2F",
-  income: "#388E3C",
-  card: "#FFFFFF",
-  shadow: "#000000",
-};
-
 export const THEMES = {
   coffee: coffeeTheme,
   forest: forestTheme,
@@ -151,10 +112,4 @@ export const THEMES = {
   mint: mintTheme,
   rose: roseTheme,
   dark: darkTheme,
-  sky: skyTheme,
-  lavender: lavenderTheme,
-  amber: amberTheme,
 };
-
-// 👇 change this to switch theme
-export const COLORS = THEMES.coffee;

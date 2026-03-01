@@ -11,15 +11,19 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { styles } from "../../assets/style/home.styles";
+import { createHomeStyles } from "../../assets/style/home.styles";
 import BalanceCard from "../../components/BalanceCard";
 import NoTransactionsFound from "../../components/NoTransactionsFound";
 import PageLoader from "../../components/PageLoader";
 import SignOutButton from "../../components/SignOutButton";
 import TransactionList from "../../components/TransactionList";
+import { useTheme } from "../../hooks/useTheme";
 import { useTransaction } from "../../hooks/useTransaction";
+
 const Index = () => {
   const router = useRouter();
+  const { colors } = useTheme();
+  const styles = createHomeStyles(colors);
   const [user, setUser] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
   const [categoriesCount, setCategoriesCount] = useState(0);
@@ -121,14 +125,15 @@ const Index = () => {
           <View style={styles.headerRight}>
             <TouchableOpacity
               style={styles.addButton}
-              onPress={() => router.push("/create")}
+              onPress={() => router.push("/settings")}
             >
-              <Ionicons name="add" size={20} color="#FFF" />
-              <Text style={styles.addButtonText}>Add</Text>
+              <Ionicons name="settings" size={20} color="#FFF" />
+              <Text style={styles.addButtonText}>Settings</Text>
             </TouchableOpacity>
             <SignOutButton />
           </View>
         </View>
+
         {/* CATEGORIES SECTION */}
         <TouchableOpacity
           style={styles.categoriesSection}
@@ -143,6 +148,7 @@ const Index = () => {
             <Ionicons name="chevron-forward" size={20} color="#FFF" />
           </View>
         </TouchableOpacity>
+
         <BalanceCard summary={summary} />
         <View style={styles.transactionsHeaderContainer}>
           <Text style={styles.sectionTitle}>Recent Transactions</Text>
@@ -162,6 +168,14 @@ const Index = () => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       />
+
+      {/* FLOATING ADD BUTTON */}
+      <TouchableOpacity
+        style={styles.floatingAddButton}
+        onPress={() => router.push("/create")}
+      >
+        <Ionicons name="add" size={28} color="#FFF" />
+      </TouchableOpacity>
     </View>
   );
 };

@@ -10,12 +10,14 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { styles } from "../../assets/style/categories.styles";
+import { createCategoriesStyles } from "../../assets/style/categories.styles";
 import PageLoader from "../../components/PageLoader";
-import { COLORS } from "../../constants/colors";
+import { useTheme } from "../../hooks/useTheme";
 
 const CategoriesScreen = () => {
   const router = useRouter();
+  const { colors } = useTheme();
+  const styles = createCategoriesStyles(colors);
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -29,7 +31,7 @@ const CategoriesScreen = () => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       setCategories(response.data);
     } catch (err) {
@@ -64,7 +66,7 @@ const CategoriesScreen = () => {
       }
     >
       <View style={styles.categoryIconContainer}>
-        <Ionicons name={item.icon} size={28} color={COLORS.primary} />
+        <Ionicons name={item.icon} size={28} color={colors.primary} />
       </View>
       <View style={styles.categoryInfo}>
         <Text style={styles.categoryName}>{item.name}</Text>
@@ -73,7 +75,7 @@ const CategoriesScreen = () => {
           {item.transactionCount !== 1 ? "s" : ""}
         </Text>
       </View>
-      <Ionicons name="chevron-forward" size={20} color={COLORS.textLight} />
+      <Ionicons name="chevron-forward" size={20} color={colors.textLight} />
     </TouchableOpacity>
   );
 
@@ -85,7 +87,7 @@ const CategoriesScreen = () => {
           style={styles.backButton}
           onPress={() => router.back()}
         >
-          <Ionicons name="arrow-back" size={24} color={COLORS.text} />
+          <Ionicons name="arrow-back" size={24} color={colors.text} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Categories</Text>
         <View style={{ width: 40 }} />

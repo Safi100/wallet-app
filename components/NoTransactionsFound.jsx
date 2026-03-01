@@ -1,18 +1,20 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { Text, TouchableOpacity, View } from "react-native";
-import { styles } from "../assets/style/home.styles";
-import { COLORS } from "../constants/colors";
+import { createHomeStyles } from "../assets/style/home.styles";
+import { useTheme } from "../hooks/useTheme";
 
 const NoTransactionsFound = () => {
   const router = useRouter();
+  const { colors } = useTheme();
+  const styles = createHomeStyles(colors);
 
   return (
     <View style={styles.emptyState}>
       <Ionicons
         name="receipt-outline"
         size={60}
-        color={COLORS.textLight}
+        color={colors.textLight}
         style={styles.emptyStateIcon}
       />
       <Text style={styles.emptyStateTitle}>No Transactions yet</Text>
@@ -23,7 +25,7 @@ const NoTransactionsFound = () => {
         style={styles.emptyStateButton}
         onPress={() => router.push("/create")}
       >
-        <Ionicons name="add-circle" size={18} color={COLORS.white} />
+        <Ionicons name="add-circle" size={18} color={colors.white} />
         <Text style={styles.emptyStateButtonText}>Add Transaction</Text>
       </TouchableOpacity>
     </View>

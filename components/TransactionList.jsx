@@ -1,10 +1,12 @@
 import { Alert, Text, View } from "react-native";
-import { styles } from "../assets/style/home.styles";
-import { COLORS } from "../constants/colors";
+import { createHomeStyles } from "../assets/style/home.styles";
+import { useTheme } from "../hooks/useTheme";
 import { formatDate } from "../lib/utils";
 import TransactionItem from "./TransactionItem";
 
 const TransactionList = ({ list, onDelete }) => {
+  const { colors } = useTheme();
+  const styles = createHomeStyles(colors);
   const handleDelete = (id) => {
     const deleteAction = onDelete || (() => {});
 
@@ -41,7 +43,7 @@ const TransactionList = ({ list, onDelete }) => {
           <Text
             style={[
               styles.dateTotalAmount,
-              { color: isPositive ? COLORS.income : COLORS.expense },
+              { color: isPositive ? colors.income : colors.expense },
             ]}
           >
             {isPositive ? "+" : ""}₪{Math.abs(totalAmount).toFixed(2)}

@@ -14,18 +14,17 @@ import {
   View,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { styles } from "../../assets/style/auth.styles";
-import VerifyCode from "../../components/VerifyCode";
-import { COLORS } from "../../constants/colors";
+import { createAuthStyles } from "../../assets/style/auth.styles";
+import { useTheme } from "../../hooks/useTheme";
 
 export default function SignUp() {
   const router = useRouter();
-
+  const { colors } = useTheme();
+  const styles = createAuthStyles(colors);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [ShowVerify, setShowVerify] = useState(false);
 
   const { width } = Dimensions.get("window");
 
@@ -49,7 +48,7 @@ export default function SignUp() {
 
         await AsyncStorage.setItem("token", token);
         await AsyncStorage.setItem("user", JSON.stringify(user));
-        setShowVerify(true);
+        router.replace("/sign-in");
       })
       .catch((err) => {
         console.log(err.response.data);
@@ -59,10 +58,6 @@ export default function SignUp() {
         setLoading(false);
       });
   };
-
-  if (ShowVerify) {
-    return <VerifyCode />;
-  }
 
   return (
     <KeyboardAwareScrollView
@@ -81,10 +76,10 @@ export default function SignUp() {
         <Text style={styles.title}>Create Account</Text>
         {error ? (
           <View style={styles.errorBox}>
-            <Ionicons name="alert-circle" size={20} color={COLORS.expense} />
+            <Ionicons name="alert-circle" size={20} color={colors.expense} />
             <Text style={styles.errorText}>{error}</Text>
             <TouchableOpacity onPress={() => setError("")}>
-              <Ionicons name="close" size={20} color={COLORS.textLight} />
+              <Ionicons name="close" size={20} color={colors.textLight} />
             </TouchableOpacity>
           </View>
         ) : null}
