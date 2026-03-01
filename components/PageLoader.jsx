@@ -5,7 +5,9 @@ const PageLoader = () => {
   const { colors, isLoading: themeLoading } = useTheme();
 
   return (
-    <View style={[styles.loadingContainer, { backgroundColor: colors.background }]}>
+    <View
+      style={[styles.loadingContainer, { backgroundColor: colors.background }]}
+    >
       <ActivityIndicator size="large" color={colors.primary} />
     </View>
   );
