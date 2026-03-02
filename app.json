@@ -33,7 +33,8 @@
           "imageWidth": 300,
           "resizeMode": "contain"
         }
-      ]
+      ],
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true
@@ -41,8 +42,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "702a61a5-6479-438c-9945-54801ef3aa26"
+        "projectId": "114c1076-18c4-4b4f-aa19-4a85557a6c94"
       }
-    }
+    },
+    "owner": "safio100"
   }
 }
